@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="panel.css" />
+    <link rel="stylesheet" href="../vendor/css/darkula.css" />
+  </head>
+  <body>
+    <div class="header">
+      <a class="button vuex"
+        @click="recording = !recording">
+        <template v-if="! recording">
+          <i class="material-icons">fiber_manual_record</i>
+          <span>Record</span>
+        </template>
+        <template v-else>
+          <i class="material-icons recording" v-else>pause_circle_filled</i>
+          <span>Pause</span>
+        </template>
+      </a>
+      <a class="button components"
+        v-if="steps.length > 0"
+        @click="undo()">
+        <i class="material-icons">undo</i>
+        <span>Undo</span>
+      </a>
+      <a class="button components"
+        @click="clear()">
+        <i class="material-icons">clear</i>
+        <span>Clear</span>
+      </a>
+      <a class="button components"
+        @click="copyTest()">
+        <i class="material-icons">content_copy</i>
+        <span>Copy to Clipboard</span>
+      </a>
+      <a class="button components"
+        @click="renameTest()">
+        <i class="material-icons">create</i>
+        <span>Rename Test</span>
+      </a>
+      <span class="message-container">
+        <span class="message">
+          {{message}}
+        </span>
+      </span>
+    </div>
+    <div id="testbar">
+      <pre>
+        <code id="testcode" class="hljs php"></code>
+      </pre>
+      <code id="steps" style="display:none;">
+class ExampleTest extends TestCase
+{
+%FAKER%
+    /**
+     * My test implementation
+     */
+    public function test%TESTNAME%()
+    {
+<template v-for="step in steps">
+  <template v-if="! step.faker">{{indent}}$this->{{ step.method }}({{ step.args | implode }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-else>{{indent}}$this->{{ step.method }}({{ step.args | implode true }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template>
+</template>
+    }
+}
+</code>
+    </div>
+    <script src="../vendor/js/vue.min.js"></script>
+    <script src="../vendor/js/jquery-2.2.1.min.js"></script>
+    <script src="../vendor/js/highlight.pack.js"></script>
+    <script src="../vendor/js/faker.js"></script>
+    <script src="panel.js"></script>
+  </body>
+</html>
