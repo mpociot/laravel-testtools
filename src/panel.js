@@ -90,7 +90,7 @@ var App = new Vue({
       },
 
       renameTest: function() {
-        this.fixedTestName = prompt('Rename test to:');
+        this.fixedTestName = prompt('Rename test to:') || '';
         this.updateCode();
       },
 
