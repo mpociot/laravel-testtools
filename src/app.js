@@ -128,7 +128,7 @@ var App = new Vue({
           }
         }
 
-        jQuery('input[type!="checkbox"][type!="submit"]').on('change', function(){
+        jQuery('textarea, input[type!="checkbox"][type!="submit"]').on('change', function(){
           if (self.recording === true) {
             var name    = jQuery(this).attr("name"),
                 value   = jQuery(this).val();
