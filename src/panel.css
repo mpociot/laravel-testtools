@@ -132,3 +132,20 @@ pre, code {
 #testbar {
   padding: 20px 0 0 0;
 }
+
+#toolbar {
+  top: 50px;
+  position: fixed;
+  width: 100%;
+  background-color: #fff;
+  padding: 20px;
+}
+
+input[type="text"] {
+  border: none;
+  box-shadow: 0 0 4px rgba(0,0,0,0.6);
+  font-size: 13px;
+  width: 200px;
+  height: 25px;
+  margin: 0 0 0 15px;
+}

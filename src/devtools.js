@@ -34,6 +34,14 @@ chrome.devtools.panels.create("Laravel TestTools", null, "src/panel.html", funct
             "method": "getSteps"
           });
         }
+
+
+        chrome.devtools.inspectedWindow.eval(
+            "window.location.pathname",
+             function(result, isException) {
+               _window.setPathname(result);
+             }
+        );
     });
 
     backgroundPageConnection.onMessage.addListener(function (message, sender, sendResponse) {

@@ -33,9 +33,9 @@
         <span>Copy to Clipboard</span>
       </a>
       <a class="button components"
-        @click="renameTest()">
+        @click="rename()">
         <i class="material-icons">create</i>
-        <span>Rename Test</span>
+        <span>Rename</span>
       </a>
       <span class="message-container">
         <span class="message">
@@ -43,12 +43,16 @@
         </span>
       </span>
     </div>
+    <div id="toolbar" v-show="renaming">
+      <input type="text" placeholder="Test name" v-model="testName">
+      <input type="text" placeholder="Test class name" v-model="className">
+    </div>
     <div id="testbar">
       <pre>
         <code id="testcode" class="hljs php"></code>
       </pre>
       <code id="steps" style="display:none;">
-class ExampleTest extends TestCase
+class %CLASSNAME% extends TestCase
 {
 %FAKER%
     /**

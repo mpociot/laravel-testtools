@@ -18,18 +18,29 @@ var App = new Vue({
     el: "body",
 
     data: {
+        renaming: false,
         linebreak: "\n",
         indent: "        ",
         steps: [],
         message: '',
-        fixedTestName: '',
+        className: 'ExampleTest',
+        testName: ucfirst(faker.company.catchPhraseNoun().replace('-','').replace(' ','')) + 'Is' + ucfirst(faker.commerce.productAdjective().replace('-','')),
         recording: false
     },
 
     watch: {
+      'className': function() {
+        this.updateCode();
+      },
+
+      'testName': function() {
+        this.updateCode();
+      },
+
       'steps': function(val, oldVal) {
         this.updateCode();
       },
+
       'recording': function(val, oldVal) {
         postMessage({
           'method': 'recording',
@@ -48,14 +59,6 @@ var App = new Vue({
           }
         });
         return hasFaker;
-      },
-
-      testname: function() {
-        if (this.fixedTestName !== '') {
-          return this.fixedTestName;
-        } else {
-          return ucfirst(faker.company.catchPhraseNoun().replace('-','').replace(' ','')) + 'Is' + ucfirst(faker.commerce.productAdjective().replace('-',''));
-        }
       }
     },
 
@@ -89,9 +92,8 @@ var App = new Vue({
           });
       },
 
-      renameTest: function() {
-        this.fixedTestName = prompt('Rename test to:') || '';
-        this.updateCode();
+      rename: function() {
+        this.renaming = ! this.renaming;
       },
 
       copyTest: function() {
@@ -116,7 +118,8 @@ var App = new Vue({
         $('#testcode').html(hljs.highlightAuto(
           $('#steps')
             .text()
-            .replace('%TESTNAME%', self.testname)
+            .replace('%TESTNAME%', self.testName)
+            .replace('%CLASSNAME%', self.className)
             .replace('%FAKER%', this.hasFaker ? fakerText : '' )
           ).value
         );
@@ -128,6 +131,15 @@ var App = new Vue({
 
 function setSteps(message) {
   App.steps = message.steps;
+}
+
+function setPathname(pathname) {
+  var className = '';
+
+  pathname.split('/').map(function(part){
+    className += ucfirst(part).replace(/[^\w]/gi, '');
+  });
+  App.className = className + 'Test';
 }
 
 function ucfirst(str) {
