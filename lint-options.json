@@ -1,0 +1,25 @@
+{
+  "node": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "nonew": true,
+  "undef": true,
+  "evil": true,
+  "trailing": true,
+  "boss": true,
+  "eqnull": true,
+  "globals": {
+    "beforeEach": true,
+    "describe": true,
+    "afterEach": true,
+    "it": true,
+    "chrome": true,
+    "window": true,
+    "document": true,
+    "_postMessage": true
+  }
+}

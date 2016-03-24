@@ -3,11 +3,11 @@
   "name": "Laravel TestTools",
   "description": "Create Laravel integration tests while surfing your website.",
   "version": "0.1.2",
-  "devtools_page": "src/devtools.html",
+  "devtools_page": "html/devtools.html",
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["vendor/js/vue.min.js", "vendor/js/jquery-2.2.1.min.js", "vendor/js/faker.js", "src/app.js"],
+      "js": ["js/content.js"],
       "run_at": "document_end"
     }
   ],
@@ -17,7 +17,7 @@
     "128": "assets/icon128.png"
   },
   "background": {
-    "scripts": ["src/background.js"]
+    "scripts": ["js/background.js"]
   },
   "permissions": ["<all_urls>", "contextMenus", "storage", "clipboardWrite"]
 }

@@ -1,0 +1,5 @@
+key.pem
+node_modules
+build/*.crx
+build/unpacked-dev
+build/unpacked-prod

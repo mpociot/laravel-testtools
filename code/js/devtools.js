@@ -10,7 +10,7 @@ backgroundPageConnection.postMessage({
     tabId: chrome.devtools.inspectedWindow.tabId
 });
 
-chrome.devtools.panels.create("Laravel TestTools", null, "src/panel.html", function(extensionPanel) {
+chrome.devtools.panels.create("Laravel TestTools", null, "../html/panel.html", function(extensionPanel) {
     var _window;
     var steps;
 
@@ -18,7 +18,7 @@ chrome.devtools.panels.create("Laravel TestTools", null, "src/panel.html", funct
         extensionPanel.onShown.removeListener(tmp); // Run once
         _window = panelWindow;
 
-        _window.postMessage = function(obj) {
+        _window._postMessage = function(obj) {
           backgroundPageConnection.postMessage({
             "name": "postMessage",
             "tabId": tab_id,
@@ -30,7 +30,7 @@ chrome.devtools.panels.create("Laravel TestTools", null, "src/panel.html", funct
         if (steps) {
           _window.setSteps(steps);
         } else {
-          _window.postMessage({
+          _window._postMessage({
             "method": "getSteps"
           });
         }
@@ -38,13 +38,13 @@ chrome.devtools.panels.create("Laravel TestTools", null, "src/panel.html", funct
 
         chrome.devtools.inspectedWindow.eval(
             "window.location.pathname",
-             function(result, isException) {
+             function(result) {
                _window.setPathname(result);
              }
         );
     });
 
-    backgroundPageConnection.onMessage.addListener(function (message, sender, sendResponse) {
+    backgroundPageConnection.onMessage.addListener(function (message) {
       if (_window) {
         _window.setSteps(message);
       } else {

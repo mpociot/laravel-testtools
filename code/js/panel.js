@@ -1,3 +1,11 @@
+var helper = require('./modules/helper'),
+    faker = require('faker/locale/en_US'),
+    $ = require('jquery'),
+    hljs = require('./libs/highlight'),
+    Vue = require('vue');
+
+hljs.registerLanguage('php', require('./libs/languages/php'));
+
 var indent = "    ";
 var fakerText="";
 fakerText += indent + "\/**" + "\n";
@@ -24,7 +32,7 @@ var App = new Vue({
         steps: [],
         message: '',
         className: 'ExampleTest',
-        testName: ucfirst(faker.company.catchPhraseNoun().replace('-','').replace(' ','')) + 'Is' + ucfirst(faker.commerce.productAdjective().replace('-','')),
+        testName: helper.ucfirst(faker.company.catchPhraseNoun().replace('-','').replace(' ','')) + 'Is' + helper.ucfirst(faker.commerce.productAdjective().replace('-','')),
         recording: false
     },
 
@@ -42,7 +50,7 @@ var App = new Vue({
       },
 
       'recording': function(val, oldVal) {
-        postMessage({
+        _postMessage({
           'method': 'recording',
           'value': val
         });
@@ -70,7 +78,7 @@ var App = new Vue({
                   if (key === 0 && faker === true) {
                     result += ""+attribute+", ";
                   } else {
-                    result += "'"+addslashes(attribute)+"', ";
+                    result += "'"+helper.addslashes(attribute)+"', ";
                   }
               });
               return result.slice(0,-2);
@@ -81,13 +89,13 @@ var App = new Vue({
 
     methods: {
       clear: function() {
-        postMessage({
+        _postMessage({
           'method': 'clear'
         });
       },
 
       undo: function() {
-          postMessage({
+          _postMessage({
             'method': 'undo'
           });
       },
@@ -129,25 +137,15 @@ var App = new Vue({
 
 });
 
-function setSteps(message) {
+window.setSteps = function(message) {
   App.steps = message.steps;
-}
+};
 
-function setPathname(pathname) {
+window.setPathname = function(pathname) {
   var className = '';
 
   pathname.split('/').map(function(part){
-    className += ucfirst(part).replace(/[^\w]/gi, '');
+    className += helper.ucfirst(part).replace(/[^\w]/gi, '');
   });
   App.className = className + 'Test';
-}
-
-function ucfirst(str) {
-  str += '';
-  var f = str.charAt(0)
-    .toUpperCase();
-  return f + str.substr(1);
-}
-function addslashes( str ) {
-    return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
-}
+};

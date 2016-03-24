@@ -5,7 +5,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     var extensionListener = function (message, sender, sendResponse) {
         // The original connection event doesn't include the tab ID of the
         // DevTools page, so we need to send it explicitly.
-        if (message.name == "init") {
+        if (message.name === "init") {
           connections[message.tabId] = port;
           return;
         }
@@ -13,7 +13,7 @@ chrome.runtime.onConnect.addListener(function (port) {
         if (message.name === "postMessage") {
           chrome.tabs.sendRequest(message.tabId, message.object);
         }
-    }
+    };
 
     // Listen to messages sent from the DevTools page
     port.onMessage.addListener(extensionListener);
@@ -23,12 +23,12 @@ chrome.runtime.onConnect.addListener(function (port) {
         // Disconnect means -> Dev tools closed. Set recording to false.
         var tabs = Object.keys(connections);
         for (var i=0, len=tabs.length; i < len; i++) {
-          if (connections[tabs[i]] == port) {
-            chrome.tabs.sendRequest(tabs[i], {
+          if (connections[tabs[i]] === port) {
+            chrome.tabs.sendRequest(parseInt(tabs[i]), {
                 "method": "recording",
                 "value": false
             });
-            delete connections[tabs[i]]
+            delete connections[tabs[i]];
             break;
           }
         }
@@ -87,25 +87,25 @@ function fake(info, tab, type) {
 
 // Create menu items
 var parent = chrome.contextMenus.create({"title": "Laravel TestTools", "contexts":["all"]});
-var visitMenu = chrome.contextMenus.create({
+chrome.contextMenus.create({
   "title": "Visit URL",
   "parentId": parent,
   "contexts":["all"],
   "onclick": visit
 });
-var seePageIsMenu = chrome.contextMenus.create({
+chrome.contextMenus.create({
   "title": "See Page is...",
   "parentId": parent,
   "contexts":["all"],
   "onclick": seePageIs
 });
-var seeTextMenu = chrome.contextMenus.create({
+chrome.contextMenus.create({
   "title": "See text",
   "parentId": parent,
   "contexts":["selection"],
   "onclick": seeText
 });
-var pressMenu = chrome.contextMenus.create({
+chrome.contextMenus.create({
   "title": "Press",
   "parentId": parent,
   "contexts":["all"],

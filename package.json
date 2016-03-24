@@ -1,0 +1,25 @@
+{
+  "name": "laravel-testtools",
+  "version": "0.1.2",
+  "description": "Chrome extension to generate Laravel integration tests while using your app.",
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "faker": "^3.1.0",
+    "grunt": "*",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-crx": "^1.0.3",
+    "grunt-mkdir": "^1.0.0",
+    "highlight": "^0.2.4",
+    "jquery": "^2.2.2",
+    "vue": "^1.0.18-csp"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  }
+}
