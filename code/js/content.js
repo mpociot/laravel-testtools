@@ -40,12 +40,23 @@ var App = new Vue({
           }
         }
 
-        $('textarea, input[type!="checkbox"][type!="submit"]').on('change', function(){
+        $('textarea, input[type!="checkbox"][type!="file"][type!="submit"]').on('change', function(){
           if (self.recording === true) {
             var name    = $(this).attr("name"),
                 value   = $(this).val();
             self.steps.push({
                 'method': 'type',
+                'args': [value, name]
+            });
+          }
+        });
+
+        $('input[type="file"]').on('change', function(){
+          if (self.recording === true) {
+            var name    = $(this).attr("name"),
+                value   = 'absolutePathToFile';
+            self.steps.push({
+                'method': 'attach',
                 'args': [value, name]
             });
           }
