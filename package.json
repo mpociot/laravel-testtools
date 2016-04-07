@@ -1,6 +1,6 @@
 {
   "name": "laravel-testtools",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Chrome extension to generate Laravel integration tests while using your app.",
   "dependencies": {},
   "devDependencies": {

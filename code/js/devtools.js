@@ -45,10 +45,18 @@ chrome.devtools.panels.create("Laravel TestTools", null, "../html/panel.html", f
     });
 
     backgroundPageConnection.onMessage.addListener(function (message) {
-      if (_window) {
-        _window.setSteps(message);
+      if (message.factories) {
+        backgroundPageConnection.postMessage({
+          "name": "setFactories",
+          "tabId": tab_id,
+          "factories": message.factories
+        });
       } else {
-        steps = message;
+        if (_window) {
+          _window.setSteps(message);
+        } else {
+          steps = message;
+        }
       }
     });
   }

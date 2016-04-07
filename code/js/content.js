@@ -168,6 +168,41 @@ chrome.extension.onRequest.addListener(function(request) {
     if(method === "undo") {
         App.steps.pop();
     }
+    if(method === "importFactories") {
+      var fileChooser = document.createElement("input");
+      fileChooser.setAttribute("accept", ".php");
+      fileChooser.type = 'file';
+
+      fileChooser.addEventListener('change', function (evt) {
+        var f = evt.target.files[0];
+        if(f) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var contents = e.target.result;
+            var regex = /factory->define\(\s?(.*)\s?,/g;
+            var match;
+            if (contents.match(regex) === null) {
+              alert("No Laravel factories found.\nPlease select the database/factories/ModelFactory.php file.");
+              return;
+            }
+            var factories = [];
+            while ((match = regex.exec(contents)) !== null) {
+                if (match.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+                factories.push(match[1]);
+            }
+            alert("Successfully imported "+factories.length+" factories.");
+            chrome.extension.sendMessage({
+              'factories' : factories
+            });
+          };
+          reader.readAsText(f);
+        }
+      });
+
+      fileChooser.click();
+    }
     if(method === "fake") {
         var fakeData  = "";
 

@@ -27,21 +27,43 @@ var App = new Vue({
 
     data: {
         renaming: false,
+        editSettings: false,
         linebreak: "\n",
         indent: "        ",
         steps: [],
         message: '',
+        namespace: '',
         className: 'ExampleTest',
         testName: helper.ucfirst(faker.company.catchPhraseNoun().replace('-','').replace(' ','')) + 'Is' + helper.ucfirst(faker.commerce.productAdjective().replace('-','')),
-        recording: false
+        recording: false,
+
+        withoutMiddleware: false,
+        dbMigrations: false,
+        dbTransactions: false
     },
 
     watch: {
+      'namespace': function() {
+        this.updateCode();
+      },
+
       'className': function() {
         this.updateCode();
       },
 
       'testName': function() {
+        this.updateCode();
+      },
+
+      'withoutMiddleware': function() {
+        this.updateCode();
+      },
+
+      'dbMigrations': function() {
+        this.updateCode();
+      },
+
+      'dbTransactions': function() {
         this.updateCode();
       },
 
@@ -58,6 +80,34 @@ var App = new Vue({
     },
 
     computed: {
+
+      useStatements: function() {
+        var statements = '';
+        if (this.dbTransactions) {
+          statements += 'use Illuminate\\Foundation\\Testing\\DatabaseTransactions;'+"\n";
+        }
+        if (this.dbMigrations) {
+          statements += 'use Illuminate\\Foundation\\Testing\\DatabaseMigrations;'+"\n";
+        }
+        if (this.withoutMiddleware) {
+          statements += 'use Illuminate\\Foundation\\Testing\\WithoutMiddleware;'+"\n";
+        }
+        return statements;
+      },
+
+      enabledTraits: function() {
+        var traits = '';
+        if (this.dbTransactions) {
+          traits += '    '+'use DatabaseTransactions;'+"\n";
+        }
+        if (this.dbMigrations) {
+          traits += '    '+'use DatabaseMigrations;'+"\n";
+        }
+        if (this.withoutMiddleware) {
+          traits += '    '+'use WithoutMiddleware;'+"\n";
+        }
+        return traits;
+      },
 
       hasFaker: function() {
         var hasFaker = false;
@@ -102,6 +152,12 @@ var App = new Vue({
 
       rename: function() {
         this.renaming = ! this.renaming;
+        this.editSettings = false;
+      },
+
+      toggleEditSettings: function() {
+        this.editSettings = ! this.editSettings;
+        this.renaming = false;
       },
 
       copyTest: function() {
@@ -128,6 +184,9 @@ var App = new Vue({
             .text()
             .replace('%TESTNAME%', self.testName)
             .replace('%CLASSNAME%', self.className)
+            .replace('%NAMESPACE%', (self.namespace !== '') ? 'namespace ' + self.namespace + ';' + "\n" : '' )
+            .replace('%CLASS_USE_STATEMENTS%', self.useStatements)
+            .replace('%ENABLED_TRAITS%', self.enabledTraits)
             .replace('%FAKER%', this.hasFaker ? fakerText : '' )
           ).value
         );

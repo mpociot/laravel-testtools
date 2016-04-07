@@ -13,11 +13,13 @@
   "boss": true,
   "eqnull": true,
   "globals": {
+    "FileReader": true,
     "beforeEach": true,
     "describe": true,
     "afterEach": true,
     "it": true,
     "chrome": true,
+    "alert": true,
     "window": true,
     "document": true,
     "_postMessage": true

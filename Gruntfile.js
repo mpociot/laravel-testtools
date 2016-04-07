@@ -75,7 +75,7 @@ module.exports = function(grunt) {
       js: {
         files: ['package.json', 'lint-options.json', 'Gruntfile.js', 'code/**/*.js',
                 'code/**/*.json', '!code/js/libs/*'],
-        tasks: ['test']
+        tasks: ['test', 'copy:main', 'manifest','mkdir:js', 'browserify', 'copy:prod']
       }
     }
 

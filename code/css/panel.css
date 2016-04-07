@@ -133,12 +133,19 @@ pre, code {
   padding: 20px 0 0 0;
 }
 
-#toolbar {
+#settings, #toolbar {
   top: 50px;
   position: fixed;
   width: 100%;
   background-color: #fff;
   padding: 20px;
+}
+
+#toolbar label, #settings label {
+  display: inline-block;
+  width: 200px;
+  min-height: 30px;
+  line-height: 30px;
 }
 
 input[type="text"] {
@@ -147,5 +154,5 @@ input[type="text"] {
   font-size: 13px;
   width: 200px;
   height: 25px;
-  margin: 0 0 0 15px;
+  margin: 0 0 5px 15px;
 }

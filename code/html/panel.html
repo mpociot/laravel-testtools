@@ -37,6 +37,11 @@
         <i class="material-icons">create</i>
         <span>Rename</span>
       </a>
+      <a class="button components"
+        @click="toggleEditSettings()">
+        <i class="material-icons">settings</i>
+        <span>Settings</span>
+      </a>
       <span class="message-container">
         <span class="message">
           {{message}}
@@ -44,17 +49,24 @@
       </span>
     </div>
     <div id="toolbar" v-show="renaming">
-      <input type="text" placeholder="Test name" v-model="testName">
-      <input type="text" placeholder="Test class name" v-model="className">
+      <label for="namespace">Namespace:</label> <input type="text" placeholder="Namespace" v-model="namespace"><br />
+      <label for="testName">Test:</label> <input type="text" placeholder="Test name" v-model="testName"><br />
+      <label for="className">Class:</label> <input type="text" placeholder="Test class name" v-model="className">
+    </div>
+    <div id="settings" v-show="editSettings">
+      <label for="withoutMiddleware">Without middleware:</label> <input type="checkbox" id="withoutMiddleware" v-model="withoutMiddleware"><br />
+      <label for="dbMigrations">Use DB migrations:</label> <input type="checkbox" id="dbMigrations" v-model="dbMigrations"><br />
+      <label for="dbTransactions">Use DB transactions:</label> <input type="checkbox" id="dbTransactions" v-model="dbTransactions"><br />
     </div>
     <div id="testbar">
       <pre>
         <code id="testcode" class="hljs php"></code>
       </pre>
       <code id="steps" style="display:none;">
+%NAMESPACE%%CLASS_USE_STATEMENTS%
 class %CLASSNAME% extends TestCase
 {
-%FAKER%
+%ENABLED_TRAITS%%FAKER%
     /**
      * My test implementation
      */
