@@ -93,9 +93,11 @@ function loadMenu(factories) {
           "title": "Create model: " + factory,
           "parentId": factoryMenu,
           "contexts": ["all"],
-          "onclick": function(info, tab) {
+          "onclick": (function(factory){
+                return function(info,tab){
 
-          }
+                };
+            }(factory))
         });
       });
     }
@@ -106,54 +108,27 @@ function loadMenu(factories) {
       "contexts":["all"]
     });
 
-    chrome.contextMenus.create({
-      "title": "Email",
-      "parentId": fakerMenu,
-      "contexts": ["all"],
-      "onclick": function(info, tab) {
-        fake(info,tab,"email");
-      }
+    var availableFaker = [
+      { type: "email", name: "Email" },
+      { type: "name", name: "Name" },
+      { type: "firstname", name: "Firstname" },
+      { type: "word", name: "Word" },
+      { type: "url", name: "URL" },
+    ];
+
+    availableFaker.forEach(function(fakerData){
+      chrome.contextMenus.create({
+        "title": fakerData.name,
+        "parentId": fakerMenu,
+        "contexts": ["all"],
+        "onclick": (function(type){
+          return function(info, tab) {
+            fake(info,tab,type);
+          };
+        }(fakerData.type))
+      });
     });
-    chrome.contextMenus.create({
-      "title": "Name",
-      "parentId": fakerMenu,
-      "contexts": ["all"],
-      "onclick": function(info, tab) {
-        fake(info,tab,"name");
-      }
-    });
-    chrome.contextMenus.create({
-      "title": "Firstname",
-      "parentId": fakerMenu,
-      "contexts": ["all"],
-      "onclick": function(info, tab) {
-        fake(info,tab,"firstname");
-      }
-    });
-    chrome.contextMenus.create({
-      "title": "Lastname",
-      "parentId": fakerMenu,
-      "contexts": ["all"],
-      "onclick": function(info, tab) {
-        fake(info,tab,"lastname");
-      }
-    });
-    chrome.contextMenus.create({
-      "title": "Word",
-      "parentId": fakerMenu,
-      "contexts": ["all"],
-      "onclick": function(info, tab) {
-        fake(info,tab,"word");
-      }
-    });
-    chrome.contextMenus.create({
-      "title": "URL",
-      "parentId": fakerMenu,
-      "contexts": ["all"],
-      "onclick": function(info, tab) {
-        fake(info,tab,"url");
-      }
-    });
+    
   });
 }
 
