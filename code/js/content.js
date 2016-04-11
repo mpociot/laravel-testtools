@@ -179,18 +179,38 @@ chrome.extension.onRequest.addListener(function(request) {
           var reader = new FileReader();
           reader.onload = function(e) {
             var contents = e.target.result;
-            var regex = /factory->define\(\s?(.*)\s?,/g;
-            var match;
-            if (contents.match(regex) === null) {
+            // Lookup factories and factory properties
+            var factoryRegex = /factory->define\(\s?(.*)\s?,/g;
+            var propertyRegex = /\s*[\'\"](.*)[\'\"]\s*=>\s*(.*)\s*,/g;
+            var match, factoryMatch;
+            if (contents.match(factoryRegex) === null) {
               alert("No Laravel factories found.\nPlease select the database/factories/ModelFactory.php file.");
               return;
             }
-            var factories = [];
-            while ((match = regex.exec(contents)) !== null) {
-                if (match.index === regex.lastIndex) {
-                    regex.lastIndex++;
+            var factories = [],
+                factoryIndex = 0,
+                properties = [];
+            var factoryStrings = contents.split(/factory->define\(\s?.*\s?,/);
+            factoryStrings.shift();
+            while ((match = factoryRegex.exec(contents)) !== null) {
+                properties = [];
+                if (match.index === factoryRegex.lastIndex) {
+                    factoryRegex.lastIndex++;
                 }
-                factories.push(match[1]);
+                while ((factoryMatch = propertyRegex.exec(factoryStrings[factoryIndex])) !== null) {
+                  if (factoryMatch.index === propertyRegex.lastIndex) {
+                      propertyRegex.lastIndex++;
+                  }
+                  properties.push({
+                    key: factoryMatch[1],
+                    value: factoryMatch[2]
+                  });
+                }
+                factoryIndex++;
+                factories.push({
+                  name: match[1],
+                  properties: properties
+                });
             }
             alert("Successfully imported "+factories.length+" factories.");
             chrome.extension.sendMessage({
@@ -203,6 +223,14 @@ chrome.extension.onRequest.addListener(function(request) {
 
       fileChooser.click();
     }
+
+    if(method === "createFactoryModel") {
+      App.steps.push({
+        'custom': true,
+        'action': '$model = factory('+request.model+')->make()'
+      });
+    }
+
     if(method === "fake") {
         var fakeData  = "";
 
@@ -234,6 +262,7 @@ chrome.extension.onRequest.addListener(function(request) {
           'args': ['$this->faker->'+request.type, $(clickedEl).attr("name")]
         });
     }
+
     if(method === "getSteps") {
       chrome.extension.sendMessage({
         'steps' : App.steps

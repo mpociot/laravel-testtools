@@ -32,6 +32,13 @@ function fake(info, tab, type) {
   });
 }
 
+function createFactoryModel(info, tab, model) {
+  chrome.tabs.sendRequest(tab.id, {
+      "method": "createFactoryModel",
+      "model": model
+  });
+}
+
 function importFactories(info, tab) {
     chrome.tabs.sendRequest(tab.id, {
         "method": "importFactories"
@@ -89,16 +96,36 @@ function loadMenu(factories) {
       });
 
       factories.forEach(function(factory) {
-        chrome.contextMenus.create({
-          "title": "Create model: " + factory,
+        var parentFactory = chrome.contextMenus.create({
+          "title": factory.name,
           "parentId": factoryMenu,
-          "contexts": ["all"],
+          "contexts": ["all"]
+        });
+        chrome.contextMenus.create({
+          "title": "Create model: " + factory.name,
+          "parentId": parentFactory,
+          "contexts":["all"],
           "onclick": (function(factory){
                 return function(info,tab){
-
+                  createFactoryModel(info, tab, factory);
                 };
-            }(factory))
+            }(factory.name))
         });
+        /**
+        factory.properties.forEach(function(property){
+            chrome.contextMenus.create({
+              "title": property.key,
+              "parentId": parentFactory,
+              "contexts":["all"],
+              "onclick": (function(key,value){
+                    return function(info,tab){
+                      createFactoryModel(info, tab, key, value);
+                    };
+                }(property.key,property.value))
+            });
+        });
+        */
+
       });
     }
 
@@ -128,7 +155,7 @@ function loadMenu(factories) {
         }(fakerData.type))
       });
     });
-    
+
   });
 }
 

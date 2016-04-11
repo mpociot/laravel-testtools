@@ -73,7 +73,7 @@ class %CLASSNAME% extends TestCase
     public function test%TESTNAME%()
     {
 <template v-for="step in steps">
-  <template v-if="! step.faker">{{indent}}$this->{{ step.method }}({{ step.args | implode }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-else>{{indent}}$this->{{ step.method }}({{ step.args | implode true }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template>
+  <template v-if="! step.faker && ! step.custom">{{indent}}$this->{{ step.method }}({{ step.args | implode }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-if="step.faker">{{indent}}$this->{{ step.method }}({{ step.args | implode true }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-if="step.custom">{{indent}}{{ step.action }};<template v-if="$index+1 < steps.length">{{linebreak}}</template></template>
 </template>
     }
 }
