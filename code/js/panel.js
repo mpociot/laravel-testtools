@@ -3,7 +3,6 @@ var helper = require('./modules/helper'),
     $ = require('jquery'),
     hljs = require('./libs/highlight'),
     Vue = require('vue');
-    Vue.config.devtools = false;
 
 hljs.registerLanguage('php', require('./libs/languages/php'));
 
