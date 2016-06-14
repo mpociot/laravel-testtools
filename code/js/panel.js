@@ -19,7 +19,7 @@ fakerText += indent + " *\/" + "\n";
 fakerText += indent + "public function setUp()" + "\n";
 fakerText += indent + "{" + "\n";
 fakerText += indent + "    parent::setUp();" + "\n";
-fakerText += indent + "    $this->faker = new Faker\\Generator();" + "\n";
+fakerText += indent + "    $this->faker = \\Faker\\Factory::create();" + "\n";
 fakerText += indent + "}";
 
 var App = new Vue({
