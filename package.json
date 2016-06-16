@@ -1,6 +1,6 @@
 {
-  "name": "Laravel TestTools",
-  "version": "0.2.4",
+  "name": "LaravelTestTools",
+  "version": "0.2.5",
   "description": "Chrome extension to generate Laravel integration tests while using your app.",
   "dependencies": {},
   "devDependencies": {
@@ -16,7 +16,7 @@
     "grunt-crx": "^1.0.3",
     "grunt-mkdir": "^1.0.0",
     "jquery": "^2.2.2",
-    "vue": "1.0.18-csp"
+    "vue": "1.0.24-csp"
   },
   "engines": {
     "node": ">= 0.10.0"
