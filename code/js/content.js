@@ -83,6 +83,9 @@ var App = new Vue({
         $('input[type="submit"],button').on('click', function(){
             if (self.recording === true) {
               var name    = $(this).attr("name") || $(this).text().trim();
+              if (name === '') {
+                name = $(this).val();
+              }
               self.steps.push({
                   'method': 'press',
                   'args': [name]
@@ -135,6 +138,9 @@ chrome.extension.onRequest.addListener(function(request) {
     }
     if(method === "press") {
         var name    = $(clickedEl).attr("name") || $(clickedEl).text().trim();
+        if (name === '') {
+          name = $(clickedEl).val();
+        }
         App.steps.push({
           'method': 'press',
           'args': [name]
