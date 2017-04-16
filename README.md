@@ -1,7 +1,7 @@
 # Laravel TestTools
 
 
-Check out the [introduction post](http://marcelpociot.com/blog/2016-03-21-laravel-testtools) about the chrome extension.
+Check out the [introduction post](http://marcelpociot.de/blog/2016-03-21-laravel-testtools) about the chrome extension.
 
 ## Installation
 
