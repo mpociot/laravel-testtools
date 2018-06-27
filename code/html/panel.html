@@ -54,6 +54,7 @@
       <label for="className">Class:</label> <input type="text" placeholder="Test class name" v-model="className">
     </div>
     <div id="settings" v-show="editSettings">
+      <label for="useDuskTests">Create Laravel Dusk tests:</label> <input type="checkbox" id="useDuskTests" v-model="useDuskTests"><br />
       <label for="withoutMiddleware">Without middleware:</label> <input type="checkbox" id="withoutMiddleware" v-model="withoutMiddleware"><br />
       <label for="dbMigrations">Use DB migrations:</label> <input type="checkbox" id="dbMigrations" v-model="dbMigrations"><br />
       <label for="dbTransactions">Use DB transactions:</label> <input type="checkbox" id="dbTransactions" v-model="dbTransactions"><br />
@@ -64,7 +65,7 @@
       </pre>
       <code id="steps" style="display:none;">
 %NAMESPACE%%CLASS_USE_STATEMENTS%
-class %CLASSNAME% extends TestCase
+class %CLASSNAME% extends %DUSK%TestCase
 {
 %ENABLED_TRAITS%%FAKER%
     /**
@@ -72,9 +73,15 @@ class %CLASSNAME% extends TestCase
      */
     public function test%TESTNAME%()
     {
-<template v-for="step in steps">
+<template v-if="! useDuskTests">
+<template v-for="step in regularSteps">
   <template v-if="! step.faker && ! step.custom">{{indent}}$this->{{ step.method }}({{ step.args | implode }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-if="step.faker">{{indent}}$this->{{ step.method }}({{ step.args | implode true }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-if="step.custom">{{indent}}{{ step.action }};<template v-if="$index+1 < steps.length">{{linebreak}}</template></template>
 </template>
+</template>
+<template v-else>
+{{indent}}$this->browse(function (Browser $browser) {
+<template v-for="step in duskSteps">  {{duskIndent}}<template v-if="! step.faker && ! step.custom">{{indent}}$browser->{{ step.method }}({{ step.args | implode }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-if="step.faker">{{indent}}$this->{{ step.method }}({{ step.args | implode true }});<template v-if="$index+1 < steps.length">{{linebreak}}</template></template><template v-if="step.custom">{{indent}}{{ step.action }};<template v-if="$index+1 < steps.length">{{linebreak}}</template></template></template>
+{{indent}}});</template>
     }
 }
 </code>

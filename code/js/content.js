@@ -41,7 +41,7 @@ var App = new Vue({
           }
         }
 
-        $('textarea, input[type!="checkbox"][type!="file"][type!="submit"]').on('change', function(){
+        $(document).on('change', 'textarea, input[type!="checkbox"][type!="file"][type!="submit"]', function(){
           if (self.recording === true) {
             var name    = $(this).attr("name"),
                 value   = $(this).val();
@@ -52,7 +52,7 @@ var App = new Vue({
           }
         });
 
-        $('input[type="file"]').on('change', function(){
+        $(document).on('change', 'input[type="file"]', function(){
           if (self.recording === true) {
             var name    = $(this).attr("name"),
                 value   = 'absolutePathToFile';
@@ -63,7 +63,7 @@ var App = new Vue({
           }
         });
 
-        $('input[type="checkbox"]').on('change', function(){
+        $(document).on('change', 'input[type="checkbox"]', function(){
           if (self.recording === true) {
             var name    = $(this).attr("name");
             if (this.checked) {
@@ -80,7 +80,7 @@ var App = new Vue({
           }
         });
 
-        $('input[type="submit"],button').on('click', function(){
+        $(document).on('click', 'input[type="submit"],button', function(){
             if (self.recording === true) {
               var name    = $(this).attr("name") || $(this).text().trim();
               if (name === '') {
@@ -93,7 +93,19 @@ var App = new Vue({
             }
         });
 
-        $('select').on('change', function(){
+        $(document).on('click', 'a', function(){
+            if (self.recording === true) {
+                var linkText = $(this).text().trim();
+                if (linkText !== '') {
+                    self.steps.push({
+                        'method': 'clickLink',
+                        'args': [linkText]
+                    });
+                }
+            }
+        });
+
+        $(document).on('change', 'select', function(){
           if (self.recording === true) {
             var name    = $(this).attr("name"),
                 value   = $(this).val();
@@ -132,8 +144,14 @@ chrome.extension.onRequest.addListener(function(request) {
     var method = request.method || false;
     if(method === "seeText") {
         App.steps.push({
-          'method': 'see',
-          'args': [request.text]
+            'method': 'see',
+            'args': [request.text]
+        });
+    }
+    if(method === "waitForText") {
+        App.steps.push({
+            'method': 'waitForText',
+            'args': [request.text]
         });
     }
     if(method === "press") {

@@ -1,10 +1,17 @@
 var connections = {};
 
 function seeText(info, tab) {
-  chrome.tabs.sendRequest(tab.id, {
-      "method": "seeText",
-      "text": info.selectionText
-  });
+    chrome.tabs.sendRequest(tab.id, {
+        "method": "seeText",
+        "text": info.selectionText
+    });
+}
+
+function waitForText(info, tab) {
+    chrome.tabs.sendRequest(tab.id, {
+        "method": "waitForText",
+        "text": info.selectionText
+    });
 }
 
 function press(info, tab) {
@@ -80,6 +87,12 @@ function loadMenu(factories) {
       "parentId": parent,
       "contexts":["selection"],
       "onclick": seeText
+    });
+    chrome.contextMenus.create({
+      "title": "Wait for text",
+      "parentId": parent,
+      "contexts":["selection"],
+      "onclick": waitForText
     });
     chrome.contextMenus.create({
       "title": "Press",

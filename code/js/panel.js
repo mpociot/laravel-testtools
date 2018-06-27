@@ -31,6 +31,7 @@ var App = new Vue({
         editSettings: false,
         linebreak: "\n",
         indent: "        ",
+        duskIndent: "  ",
         steps: [],
         message: '',
         namespace: '',
@@ -40,7 +41,8 @@ var App = new Vue({
 
         withoutMiddleware: false,
         dbMigrations: false,
-        dbTransactions: false
+        dbTransactions: false,
+        useDuskTests: false
     },
 
     watch: {
@@ -64,6 +66,10 @@ var App = new Vue({
         this.updateCode();
       },
 
+      'useDuskTests': function() {
+        this.updateCode();
+      },
+
       'dbTransactions': function() {
         this.updateCode();
       },
@@ -82,6 +88,50 @@ var App = new Vue({
 
     computed: {
 
+      duskSteps: function() {
+          /**
+           * We need to modify some arguments in order to work with Dusk tests.
+           */
+          var steps = this.steps.slice();
+
+          steps = steps.map(function (step) {
+              step = Object.assign({}, step);
+              step.args = step.args.slice();
+
+              if (step.method === 'type') {
+                  step.args = step.args.reverse();
+              }
+              if (step.method === 'seePageIs') {
+                  step.method = 'assertPathIs';
+              }
+              if (step.method === 'see') {
+                  step.method = 'assertSee';
+              }
+              return step;
+          });
+
+          return steps;
+      },
+
+      regularSteps: function() {
+          /**
+           * We need to remove some methods that are not compatible without Dusk.
+           */
+          var steps = this.steps.slice();
+
+          steps = steps.map(function (step) {
+              step = Object.assign({}, step);
+              step.args = step.args.slice();
+              return step;
+          });
+
+          steps = steps.filter(function (step) {
+              return step.method !== 'waitForText' && step.method !== 'clickLink';
+          });
+
+          return steps;
+      },
+
       useStatements: function() {
         var statements = '';
         if (this.dbTransactions) {
@@ -92,6 +142,10 @@ var App = new Vue({
         }
         if (this.withoutMiddleware) {
           statements += 'use Illuminate\\Foundation\\Testing\\WithoutMiddleware;'+"\n";
+        }
+        if (this.useDuskTests) {
+          statements += 'use Tests\\DuskTestCase;'+"\n";
+          statements += 'use Laravel\\Dusk\\Browser;'+"\n";
         }
         return statements;
       },
@@ -188,6 +242,7 @@ var App = new Vue({
             .replace('%NAMESPACE%', (self.namespace !== '') ? 'namespace ' + self.namespace + ';' + "\n" : '' )
             .replace('%CLASS_USE_STATEMENTS%', self.useStatements)
             .replace('%ENABLED_TRAITS%', self.enabledTraits)
+            .replace('%DUSK%', self.useDuskTests ? 'Dusk' : '')
             .replace('%FAKER%', this.hasFaker ? fakerText : '' )
           ).value
         );
