@@ -111,7 +111,7 @@ var App = new Vue({
                 value   = $(this).val();
             self.steps.push({
                 'method': 'select',
-                'args': [value, name]
+                'args': [name, value]
             });
           }
         });
